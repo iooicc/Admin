@@ -50,12 +50,12 @@
 			<dependency>
 				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-core</artifactId>
-				<version>4.1.8-SNAPSHOT</version>
+				<version>4.4.2</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-http</artifactId>
-				<version>4.1.8-SNAPSHOT</version>
+				<version>4.4.2</version>
 			</dependency>
 			<!-- Apache Commons -->
 			<dependency>
@@ -243,19 +243,6 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-	<!-- deploy -->
-	<distributionManagement>
-		<repository>
-			<id>Cammm-admin</id>
-			<name>Cammm-admin Release Repository</name>
-			<url>http://39.105.142.118:9888/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>Cammm-admin</id>
-			<name>Cammm-admin Snapshot Repository</name>
-			<url>http://39.105.142.118:9888/repository/maven-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 	<modules>
 		<module>admin-framework</module>
 		<module>admin-core</module>
