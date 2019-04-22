@@ -1,7 +1,7 @@
 # Admin
 # 引言
 
-Admin 项目是根据JeeSite 4.0 进行改造的一个 Java EE 企业级快速开发平台，基于经典技术组合（Spring Boot、Spring MVC、Apache Shiro、Beetl、BeetlSQL、Bootstrap、AdminLTE），在线代码生成功能，包括核心模块如：组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、内容管理、工作流等。采用松耦合设计；界面无刷新，一键换肤；众多账号安全设置，密码策略；在线定时任务配置；支持集群，支持SAAS；支持多数据源。
+Admin 项目是根据JeeSite 4.0 进行改造的一个 Java EE 企业级快速开发平台，基于经典技术组合（Spring Boot、Spring MVC、Apache Shiro、flyway、Beetl、BeetlSQL、Bootstrap、AdminLTE），在线代码生成功能，包括核心模块如：组织机构、角色用户、菜单及按钮授权、数据权限、系统参数、内容管理、工作流等。采用松耦合设计；界面无刷新，一键换肤；众多账号安全设置，密码策略；在线定时任务配置；支持集群，支持SAAS；支持多数据源。
 
 JeeSite 4.0内部framework、core包全部代码混淆，正常开发修改源码很吃力，很难认识内部机制。下载本项目更有利与企业快速开发运用。基本有所有的JeeSite 4.0的特性。
 
@@ -21,4 +21,4 @@ Admin 快速开发平台的主要目的是能够让初级的研发人员快速�
 7. 关系平台的发展战略考虑，底层部分代码暂未开源，但这不影响您的二次开发。
 8. 请知悉社区版，用户数不可超过100个，最大允许10个用户同时在线（不含匿名）。
 
-#  Admin项目是根据JeeSite 4.0 进行改造的，若有侵权行为，请发邮件（wugaoshang@hotmail.com）联系作者!谢谢！
+##  Admin项目是根据JeeSite 4.0 进行改造的，若有侵权行为，请发邮件（wugaoshang@hotmail.com）联系作者!谢谢！
