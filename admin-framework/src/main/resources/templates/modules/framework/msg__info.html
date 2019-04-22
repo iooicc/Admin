@@ -1,0 +1,91 @@
+<% layout('/layouts/_default.html', {title: '消息详情', libs: ['dataGrid','validate', 'fileupload']}){ %>
+<%
+var items=[];
+%>
+
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				 <i class="fa fa-list-alt"></i> 消息详情
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse" style="cursor: pointer;"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+      <form id="inputForm" action="#" method="post" class="form-horizontal" novalidate="novalidate">
+			<div class="box-body">
+				<div class="form-unit">基本信息</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								 消息标题：<i class="fa icon-question hide"></i></label>
+								<div class="col-sm-6 control-text">
+									${info.msgInner.msgTitle!}
+								</div>
+						</div>
+					</div>
+				</div>	
+					
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide" aria-required="true">*</span> 消息内容：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+                              <textarea readonly="readonly" rows="4" maxlength="500" class="form-control">${info.msgInner.msgContent!}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								发送者：<i class="fa icon-question hide"></i></label>
+								<div class="col-sm-6 control-text">
+									${info.msgInner.sendUserName!}
+								</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								创建时间：<i class="fa icon-question hide"></i></label>
+								<div class="col-sm-6 control-text">
+									${info.msgInner.createDate!, "yyyy-MM-dd HH:mm:ss"}
+								</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								 读取时间：<i class="fa icon-question hide"></i></label>
+								<div class="col-sm-6 control-text">
+									${info.msgInnerRecord.readDate!, "yyyy-MM-dd HH:mm:ss"}
+								</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">							
+					<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>					
+					</div>
+				</div>
+			</div>			
+</form>
+	</div>
+
+</div>
+<% } %>

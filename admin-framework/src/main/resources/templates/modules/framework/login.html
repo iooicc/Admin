@@ -1,0 +1,64 @@
+<% layout('/layouts/_default.html', {title: '登录', libs: ['validate'], bodyClass: 'login-page'}){ %>
+<% include('/include/_upgrade.html'){} // 如果客户浏览器版本过低，则显示浏览器升级提示。 %>
+<link rel="stylesheet" href="${ctxPath}/static/icheck/1.0/square/blue.css?">
+<link rel="stylesheet" href="${ctxPath}/static/jquery-toastr/2.0/toastr.min.css?">
+<link rel="stylesheet" href="${ctxPath}/static/modules/sys/sysLogin.css?">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="${ctxPath}/login"><b>${@Global.getProperty("project.productName")}</b>
+      <small>${@Global.getProperty("project.productVersion")}</small></a>
+  </div>
+  <div class="login-box-body">
+    <#form:form id="loginForm" model="${user!}" action="${ctxPath}/login" method="post">
+      <div class="form-group has-feedback">
+        <span class="glyphicon glyphicon-user form-control-feedback" title="登录账号"></span>
+        <#form:input type="text" id="username" name="username" class="form-control required"
+          data-msg-required="请填写登录账号." placeholder="登录账号"
+          value="${cookie('rememberUserCode')}"/>
+      </div>
+      <div class="form-group has-feedback">
+        <span class="glyphicon glyphicon-lock form-control-feedback"
+          title="登录密码，鼠标按下显示密码"
+          onmousedown="$('#password').attr('type','text')"
+          onmouseup="$('#password').attr('type','password')"></span>
+        <#form:input type="password" id="password" name="password" class="form-control required"
+          data-msg-required="请填写登录密码." placeholder="登录密码" autocomplete="off"/>
+      </div>
+      <div class="form-group has-feedback" id="isValidCodeLogin" style="display:${isValidCodeLogin?'blank':'none'}">
+        <#form:validcode name="validCode" isRequired="true" isRemote="true" isLazy="false"/>
+        
+      </div>
+      <div class="form-group">
+        <div class="mt5 icheck">
+          <label title="公共场所慎用,下次不需要再填写帐号"><input type="checkbox"
+            name="rememberUserCode"${isNotBlank(cookie('rememberUserCode'))?' checked':''}
+            class="form-control" data-style="square-blue"> 记住账号</label> &nbsp; 
+          <label title="公共场所慎用,下次不需要再填写帐号和密码"><input type="checkbox"
+            name="rememberMe"${isNotBlank(cookie('rememberMe'))?' checked':''}
+            class="form-control" data-style="square-blue"> 记住密码</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block btn-flat"
+          id="btnSubmit" data-loading="登录验证成功，正在进入..."
+          data-login-valid="正在验证登录，请稍后...">立即登录</button>
+      </div>
+    </#form:form>
+    <div class="row">
+      <div class="col-xs-12">
+        <%if(false) {%>
+        <a href="${ctxPath}/account/forgetPwd" class="pull-left">[ 忘记密码 ]</a>
+        <%}%>
+        <%if(@ConfigUtil.getConfigString("sys.account.registerUser")=="true") {%>
+        <a href="${ctxPath}/account/register" class="pull-left ml10">[ 注册账号 ]</a>
+        <%}%>
+      </div>
+    </div>
+  </div>
+  <div class="login-copyright">${@Global.getProperty("project.copyright")}</div>
+</div>
+<% } %>
+<script>var secretKey = '';</script>
+<script src="${ctxPath}/static/jquery-toastr/2.0/toastr.min.js?"></script>
+<script src="${ctxPath}/static/common/des.js?"></script>
+<script src="${ctxPath}/static/modules/sys/sysLogin.js?"></script>

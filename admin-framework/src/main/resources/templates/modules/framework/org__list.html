@@ -1,0 +1,79 @@
+<% layout('/layouts/_default.html', {title: '机构管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+  <div class="box box-main">
+    <div class="box-header">
+      <div class="box-title">
+        <i class="fa icon-book-open"></i> 机构管理
+      </div>
+      <div class="box-title"></div>
+      <div class="box-tools pull-right">
+        <a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+        <a href="#" class="btn btn-default" id="btnRefreshTree" title="刷新"><i class="fa fa-refresh"></i> 刷新</a>
+        <a href="#" class="btn btn-default" id="btnExpandTreeNode" title="展开一级"><i class="fa fa-angle-double-down"></i> 展开</a>
+        <a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="折叠全部"><i class="fa fa-angle-double-up"></i> 折叠</a>
+        
+        <a href="${ctxPath}/org/form?sysCode=" class="btn btn-default btnTool" title="新增机构"><i class="fa fa-plus"></i> 新增</a>
+        <a href="#" class="btn btn-default" id="btnUpdateSort" title="保存排序"><i class="fa fa-sort-amount-asc"></i> 保存排序</a>
+      </div>
+    </div>
+    <div class="box-body">
+      <form id="searchForm" action="${ctxPath}/org/listData" method="post" class="form-inline hide">
+        <div class="form-group">
+          <label class="control-label">机构名称：</label>
+          <div class="control-inline">
+            <#form:input name="orgName" value="${parameter.orgName}" maxlength="50" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-sm">查询</button>
+          <button type="reset" class="btn btn-default btn-sm">重置</button>
+        </div>
+      </form>
+      <form id="dataGridForm" action="${ctxPath}/org/updateTreeSort" method="post">
+        <table id="dataGrid"></table>
+      </form>
+    </div>
+  </div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+  searchForm: $("#searchForm"),
+  columnModel: [ 
+    {header:'机构名称', name:'orgName', width:200, formatter: function(val, obj, row, act){
+      return '<a href="${ctxPath}/org/form?orgCode='+row.orgCode+'" class="btnList" data-title="编辑机构">'+(val||row.id)+'</a>';
+    }},
+    {header:'机构全称', name:'fullName', width:150},
+    {header:'排序', name:'treeSort', width:63, align:"center", formatter: function(val, obj, row, act){
+      var html = [];
+      html.push('<input type="text" name="sorts['+row.id+']" value="'+row.treeSort+'"/>');
+      return html.join('');
+    }},
+    {header:'操作', name:'actions', width:100, sortable:false, formatter: function(val, obj, row, act){
+      var actions = [];
+      actions.push('<a href="${ctxPath}/org/form?orgCode='+row.id+'" class="btnList" title="编辑机构"><i class="fa fa-pencil"></i></a>&nbsp;');
+      actions.push('<a href="${ctxPath}/org/delete?orgCode='+row.id+'" class="btnList" title="删除机构" data-confirm="确认要删除该机构及所有子机构吗？" data-deltreenode="'+row.id+'"><i class="fa fa-trash-o"></i></a>&nbsp;');
+      actions.push('<a href="${ctxPath}/org/form?parentCode='+row.id+'" class="btnList" title="新增下级机构"><i class="fa fa-plus-square"></i></a>&nbsp;');
+      return actions.join('');
+    }}
+  ],
+  treeGrid: true,     // 启用树结构表格
+  defaultExpandLevel: 0,  // 默认展开的层次
+  expandNodeClearPostData: 'orgName', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）
+  // 加载成功后执行事件
+  ajaxSuccess: function(data){
+    
+  }
+});
+
+// 绑定更新排序按钮
+$('#btnUpdateSort').click(function(){
+   js.ajaxSubmitForm($("#dataGridForm"), function(data){
+    if(data.result == Global.TRUE){
+      $('#btnRefreshTree').click();
+    }
+    js.showMessage(data.message);
+  }, "json");
+});
+</script>

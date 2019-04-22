@@ -1,0 +1,187 @@
+<% layout('/layouts/_default.html', {title: '', libs: ['validate', 'colorpicker']}){ %>
+<%
+var items=[];
+%>
+<div class="main-content">
+  <div class="box box-main">
+    <div class="box-header">
+      <div class="box-title">
+        <i class="fa icon-book-open"></i> 编辑菜单（
+      </div>
+      <div class="box-title dropdown input-inline">
+        <div class="dropdown-toggle" data-toggle="dropdown">
+          <span id="sysCodeName">主导航菜单</span><b class="caret"></b>
+        </div>
+        <ul class="dropdown-menu">
+          <%for(var ii in @DictUtil.getDictList("sys_codes")) {%>
+          <li><a href="javascript:" onclick="
+              $('#sysCode').val('${ii.dictValue}');
+              $('#sysCodeName').text('${ii.dictLabel}');
+            "><i class="fa fa-angle-right"></i> ${ii.dictLabel}</a></li>
+          <%}%>
+        </ul>
+      </div>
+      <div class="box-title">）</div>
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <#form:form id="inputForm" model="${menu}" action="${ctxPath}/menu/save" method="post" class="form-horizontal">
+      <#form:hidden name="menuCode" value="${menu.menuCode}" />
+      <#form:hidden id="sysCode" path="sysCode" />
+
+      <div class="box-body">
+        <div class="form-unit">基本信息</div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4">上级菜单：</label>
+              <div class="col-sm-8">
+                <#form:treeselect title="上级菜单" id="parent"
+                  path="parent.menuCode" name="parent.menuCode" labelPath="parent.menuName"
+                  url="${ctxPath}/menu/treeData?excludeCode=${menu.menuCode}&sysCode=${menu.sysCode}&isShowNameOrig=true"
+                  class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4">可见：</label>
+              <div class="col-sm-8">
+                <#form:radio name="isShow" value="${menu.isShow!'1'}" dictType="sys_show_hide" class="form-control required"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4"><span class="required">*</span> 菜单名称：</label>
+              <div class="col-sm-8">
+                <#form:input id="menuName" name="menuName" value="${menu.menuName}" maxlength="50" class="form-control required" />
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="标识当前是否是个菜单，还是只是设置权限">
+                <span class="required">*</span> 菜单类型：<i class="fa icon-question"></i></label>
+              <div class="col-sm-8">
+                <#form:radio id="menuType" name="menuType" value="${menu.menuType!'1'}" dictType="sys_menu_type" class="form-control required" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="超级链接的URL地址，跟路径在管理路径下，外部链接需加“http://”;
+   1、以  /// 开头，则代表是网站根路径（结果：http://localhost/{href}）
+   2、以  // 开头，则代表是工程根路径（结果：http://localhost/{ctxPath}/{href}）
+   3、以  / 开头，则代表是管理根路径（结果：http://localhost/{ctxPath}{adminPath}/{href}）
+ 可带变量，变量格式  {变量名}
+   1、jeesite.yml中的key可作为变量设置
+   2、{ssoToken} : 单点登录的token编码，url参数中的参数分隔符请使用“%26”进行转义，
+  例如：{projectUrl}/sso/{ssoToken}?url=/sys/user/list?p1=v1%26p2=v2&relogin=true
+   3、{userCode} : 当前用户编码 
+   4、{userName} : 当前用户名称 
+   5、{userType} : 当前用户类型 ">
+                链接(Href)：<i class="fa icon-question"></i></label>
+              <div class="col-sm-8">
+                <#form:input name="menuHref" value="${menu.menuHref}" maxlength="2000" class="form-control" />
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="链接打开的目标，默认addTabPage方式（新窗口中打开如：_blank）">
+                目标(Target)：<i class="fa icon-question"></i></label>
+              <div class="col-sm-8">
+                <#form:input id="menuTarget" name="menuTarget" value="${menu.menuTarget}" maxlength="10" class="form-control"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4">排序(升序)：</label>
+              <div class="col-sm-8">
+                <#form:input id="treeSort" type="number" name="treeSort" value="${menu.treeSort}" maxlength="50" class="form-control required"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6 isPerm2">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="控制器中定义的权限标识，如：@RequiresPermissions('权限标识')">
+                权限标识：<i class="fa icon-question"></i></label>
+              <div class="col-sm-8">
+                <#form:input id="permission" name="permission" value="${menu.permission}" maxlength="100" class="form-control"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6 isMenu">
+            <div class="form-group">
+              <label class="control-label col-sm-4">菜单图标：</label>
+              <div class="col-sm-8">
+                <#form:iconselect id="menuIcon" name="menuIcon" value="${menu.menuIcon}" class=""/>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6 isMenu">
+            <div class="form-group">
+              <label class="control-label col-sm-4">字体颜色：</label>
+              <div class="col-sm-8">
+                <div class="input-group input-color" data-color-format="hex">
+                  <#form:input name="menuColor" value="${menu.menuColor}" maxlength="50" class="form-control"/>
+                  <span class="input-group-addon">
+                    <i style="background-color:${menu.menuColor!'#ddd'}"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-unit">其它信息</div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label class="control-label col-sm-2">备注：</label>
+              <div class="col-sm-10">
+                <#form:textarea name="remarks" value="${menu.remarks}" rows="3" maxlength="200" class="form-control"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box-footer">
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+            <button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+          </div>
+        </div>
+      </div>
+    </#form:form>
+  </div>
+</div>
+<% } %>
+<script type="text/javascript">
+$("#inputForm").validate({
+  submitHandler: function(form){
+    js.ajaxSubmitForm($(form), function(data){
+      js.showMessage(data.message);
+      if(data.result == Global.TRUE){
+        js.closeCurrentTabPage(function(contentWindow){
+          contentWindow.$('#dataGrid').dataGrid('refreshTreeChildren',
+              $('#parentCode').val(), '${menu.id}');
+        });
+      }
+    }, "json");
+    }
+});
+// 颜色控件初始化
+$('#inputForm .input-color').colorpicker();
+</script>

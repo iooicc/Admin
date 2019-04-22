@@ -1,0 +1,83 @@
+<% layout('/layouts/_default.html', {title: '角色管理', libs: ['dataGrid']}){ %>
+<%
+var items=[];
+%>
+<div class="main-content">
+  <div class="box box-main">
+    <div class="box-header">
+      <div class="box-title">
+        <i class="fa icon-people"></i> 角色管理
+      </div>
+      <div class="box-tools pull-right">
+        <a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+        <a href="${ctxPath}/role/form?op=add" class="btn btn-default btnTool" title="新增角色"><i class="fa fa-plus"></i> 新增</a>
+      </div>
+    </div>
+    <div class="box-body">
+      <#form:form id="searchForm" model="${row}" action="${ctxPath}/role/listData" method="post" class="form-inline hide"
+          data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+        <div class="form-group">
+          <label class="control-label">角色名称：</label>
+          <div class="control-inline">
+            <#form:input path="roleName" maxlength="100" class="form-control"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label">角色编码：</label>
+          <div class="control-inline">
+            <#form:input path="roleCode" maxlength="100" class="form-control"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label">是否系统：</label>
+          <div class="control-inline width-60">
+            <#form:select path="isSys" dictType="sys_yes_no" blankOption="true" class="form-control"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label">状态：</label>
+          <div class="control-inline width-60">
+            <#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-sm">查询</button>
+          <button type="reset" class="btn btn-default btn-sm">重置</button>
+        </div>
+      </#form:form>     
+      <table id="dataGrid"></table>
+      <div id="dataGridPage"></div>
+    </div>
+  </div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+  searchForm: $("#searchForm"),
+  columnModel: [
+    {header:'角色名称', name:'roleName', index:'a.role_name', width:150, align:"center", frozen:true, formatter: function(val, obj, row, act){
+      return '<a href="${ctxPath}/role/form?roleCode='+row.roleCode+'&op=edit" class="btnList" data-title="编辑角色">'+(val||row.id)+'</a>';
+    }},
+    {header:'角色编码', name:'roleCode', index:'a.role_code', width:150, align:"center"},
+    {header:'创建时间', name:'createDate', index:'a.update_date', width:130, align:"center", formatter:"date", formatoptions: {srcformat:'u',newformat:'Y-m-d H:i:s'}},
+    {header:'操作', name:'actions', width:130, sortable:false, title:false, formatter: function(val, obj, row, act){
+      var actions = [];
+      actions.push('<a href="${ctxPath}/role/form?roleCode='+row.roleCode+'&op=edit" class="btnList" title="编辑角色"><i class="fa fa-pencil"></i></a>&nbsp;');
+      if(!row.isSys || row.isSys=="" || row.isSys==0) {
+        actions.push('<a href="${ctxPath}/role/delete?roleCode='+row.roleCode+'" class="btnList" title="删除角色" data-confirm="确认要删除该角色吗？"><i class="fa fa-trash-o"></i></a>&nbsp;');
+      }
+      actions.push('<a href="javascript:" class="btnMore" title="更多操作"><i class="fa fa-chevron-circle-right"></i></a>&nbsp;');
+      actions.push('<div class="moreItems">');
+      actions.push('<a href="${ctxPath}/role/formAuthUser?roleCode='+row.id+'" class="btn btn-default btn-xs btnList" title="角色分配用户"><i class="fa fa-user"></i> 分配用户</a>&nbsp;');
+      actions.push('<a href="${ctxPath}/role/formAuthDataScope?roleCode='+row.id+'" class="btn btn-default btn-xs btnList" title="数据权限"><i class="fa fa-check-circle-o"></i> 数据权限</a>&nbsp;');
+      actions.push('</div>');     
+      return actions.join('');
+    }}
+  ],
+  // 加载成功后执行事件
+  ajaxSuccess: function(data){
+    
+  }
+});
+</script>

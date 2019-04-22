@@ -1,0 +1,23 @@
+<% layout('/layouts/_default.html', {title: '', bodyClass: 'fixed noscroll2 sidebar-mini', libs: ['tabPage']}){ %>
+<% include('/include/_upgrade.html'){} // 如果客户浏览器版本过低，则显示浏览器升级提示。 %>
+<link rel="stylesheet" href="${ctxPath}/jquery-toastr/2.0/toastr.min.css?V4.0-08142256">
+<link rel="stylesheet" href="${ctxPath}/adminlte/css/skins/skin-blue-light.css?V4.0-08142256">
+<link rel="stylesheet" href="${ctxPath}/modules/sys/sysIndex.css?V4.0-08142256">
+
+<header class="main-header">    
+  <% include('/include/_header.html'){} %>
+</header>
+<aside class="main-sidebar">
+  <% include('/include/_aside.html'){} %>
+</aside>
+<div class="content-wrapper">
+  <div id="tabpanel"></div>
+</div>
+<% } %>
+
+<div class="hide" id="desktopTabPage" data-title="欢迎页"
+  data-url="${ctxPath}/welcome"></div>
+<div class="hide" id="modifyPasswordTip" data-message=""></div>
+<script src="${ctxPath}/jquery-toastr/2.0/toastr.min.js?"></script>
+<script src="${ctxPath}/jquery-plugins/jquery.slimscroll.js"></script>
+<script src="${ctxPath}/modules/sys/sysIndex.js?"></script>

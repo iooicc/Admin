@@ -1,0 +1,134 @@
+<%
+/*
+ * 默认布局文件
+ * @param title 页面标题
+ * @param bodyClass body标签的class内容
+ * @param libs 要引用的js或css类库
+ */
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="webkit" name="renderer"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="keywords" content=""/>
+<meta name="description" content=""/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta content="no-cache" http-equiv="Pragma"/>
+<meta http-equiv="Expires" content="0"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=1" name="viewport"/>
+<title></title>
+<script src="${ctxPath}/global.min.js"></script>
+<script src="${ctxPath}/static/jquery/jquery-1.12.4.min.js"></script>
+<!--[if lt IE 9]><script src="${ctxPath}/static/common/h5fix.min.js"></script><![endif]-->
+<link rel="stylesheet" href="${ctxPath}/static/fonts/font-icons.min.css">
+<link rel="stylesheet" href="${ctxPath}/static/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="${ctxPath}/static/select2/4.0/select2.css?">
+<link rel="stylesheet" href="${ctxPath}/static/icheck/1.0/minimal/grey.css?">
+<% for(lib in libs) { %>
+<% if('zTree'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/jquery-ztree/3.5/css/metro/zTreeStyle.css?">
+<% } else if('tabPage'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/wdScrollTab/css/TabPanel.css?">
+<% } else if('dataGrid'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/jqGrid/4.7/css/ui.jqgrid.css?">
+<% } else if('layout'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/jquery-plugins/jquery.layout-latest.css?">
+<% } else if('fileupload'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/webuploader/0.1.5/webuploader.css?">
+<% } else if('fileupload_0_1'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/webuploader/0.1/webuploader.extend.css?">
+<% } else if('colorpicker'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/colorpicker/bootstrap-colorpicker.css"/>
+<% } else if('cropper'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/cropper/3.1/cropper.css?V4.1-10161628"/>
+<% } else if('citySelect'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/citySelect/Snaddress.min.css?"/>
+<% } else if('codemirror'==lib) { %>
+<link rel="stylesheet" href="${ctxPath}/static/codemirror/5.41.0/lib/codemirror.css?"/>
+<% } %>
+<% } %>
+<link rel="stylesheet" href="${ctxPath}/static/adminlte/css/AdminLTE.min.css?">
+<link rel="stylesheet" href="${ctxPath}/static/common/jeesite.css?">
+<link rel="stylesheet" href="${ctxPath}/static/common/common.css?">
+</head>
+<body class="hold-transition ${bodyClass!}">
+<% if (!@my.utils.ListUtil.inString('layout', libs!)){ %>
+  <div class="wrapper">${layoutContent}</div>
+<% } else { %>
+${layoutContent}
+<% } %>
+
+  <a id="scroll-up" href="#" class="btn btn-sm"><i class="fa fa-angle-double-up"></i></a>
+  <script src="${ctxPath}/static/bootstrap/js/bootstrap.min.js"></script>
+  <script src="${ctxPath}/static/select2/4.0/select2.js?"></script>
+  <script src="${ctxPath}/static/select2/4.0/i18n/zh_CN.js?"></script>
+  <script src="${ctxPath}/static/layer/3.1/layer.js?"></script>
+  <script src="${ctxPath}/static/my97/WdatePicker.js?"></script>
+  
+  <% for(lib in libs) { %>
+  <% if('zTree'==lib) { %>
+	<script src="${ctxPath}/static/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js?"></script>
+	<% } else if('tabPage'==lib) { %>
+	<script src="${ctxPath}/static/wdScrollTab/js/TabPanel.js?"></script>
+  <script src="${ctxPath}/static/wdScrollTab/js/TabPanel.extend.js?"></script>
+	<% } else if('dataGrid'==lib) { %>
+	
+	<script src="${ctxPath}/static/jqGrid/4.7/js/jquery.jqGrid.js?"></script>
+	<script src="${ctxPath}/static/jqGrid/4.7/js/jquery.jqGrid.extend.js?"></script>
+	<script src="${ctxPath}/static/jqGrid/4.7/js/i18n/zh_CN.js?"></script>
+	
+	<% } else if('validate'==lib) { %>
+	<script src="${ctxPath}/static/jquery-validation/1.16/jquery.validate.js?"></script>
+	<script src="${ctxPath}/static/jquery-validation/1.16/localization/messages_zh_CN.js?"></script>
+	<script src="${ctxPath}/static/jquery-validation/1.16/jquery.validate.extend.js?"></script>
+	<% } else if('layout'==lib) { %>
+	<script src="${ctxPath}/static/jquery/jquery-ui-draggable-1.12.1.min.js?"></script>
+	<script src="${ctxPath}/static/jquery/jquery-ui-effect-1.12.1.min.js?"></script>
+	<script src="${ctxPath}/static/jquery-plugins/jquery.layout-latest.js?"></script>
+	<% } else if('inputmask'==lib) { %>
+  <script src="${ctxPath}/static/jquery-plugins/jquery.inputmask.js?"></script>
+	<% } else if('fileupload'==lib) { %>
+  <script src="${ctxPath}/static/webuploader/0.1.5/webuploader.js?"></script>
+  <% } else if('fileupload_0_1'==lib) { %>
+	<script src="${ctxPath}/static/webuploader/0.1/webuploader.js?"></script>
+	<script src="${ctxPath}/static/webuploader/0.1/webuploader.extend.js?"></script>
+	<% } else if('ueeditor'==lib) { %>
+	<script src="${ctxPath}/static/ueditor/1.4/ueditor.config.js?"></script>
+	<script src="${ctxPath}/static/ueditor/1.4/ueditor.all.js?"></script>
+	<script src="${ctxPath}/static/ueditor/1.4/lang/zh_CN/zh_CN.js?"></script>
+	<% } else if('colorpicker'==lib) { %>
+  <script src="${ctxPath}/static/colorpicker/bootstrap-colorpicker.js"></script>
+	<% } else if('cropper'==lib) { %>
+  <script src="${ctxPath}/static/cropper/3.1/cropper.js"></script>
+	<% } else if('citySelect'==lib) { %>
+  <script src="${ctxPath}/static/citySelect/New.CitySelect.min.js"></script>
+  <% } else if('ueditor'==lib) { %>
+	<script src="${ctxPath}/static/ueditor/1.4.3.3/ueditor.config.js?"></script>
+	<script src="${ctxPath}/static/ueditor/1.4.3.3/ueditor.all.js?"></script>
+	<script src="${ctxPath}/static/ueditor/1.4.3.3/lang/zh-cn/zh-cn.js?"></script>
+  <% } else if('zeroclipboard'==lib) { %>
+	<script src="${ctxPath}/static/ueditor/1.4.3.3/third-party/zeroclipboard/ZeroClipboard.js?"></script>
+	<script type="text/javascript">
+	$("a.clipboard,button.clipboard").each(function() {
+		var clip=new ZeroClipboard($(this));
+    clip.on("error", function() {
+      $(this).hide();
+      ZeroClipboard.destroy();
+    });
+    clip.on("aftercopy", function() {
+    	js.showMessage("复制成功", "提示", "info", 1000);
+    });
+	});
+	</script>
+  <% } else if('codemirror'==lib) { %>
+  <script src="${ctxPath}/static/codemirror/5.41.0/lib/codemirror.js?"></script>
+  <% } %>
+	<% } %>
+	
+  <script src="${ctxPath}/static/common/jeesite.js?"></script>
+  <script src="${ctxPath}/static/common/i18n/jeesite_zh_CN.js?"></script>
+  <script src="${ctxPath}/static/common/common.js"></script>
+</body>
+</html>

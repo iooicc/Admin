@@ -1,0 +1,75 @@
+<nav class="navbar navbar-static-top">
+  <div class="logo" data-toggle="push-menu">
+    <b>${@Global.getProperty("project.productName")}</b>
+    <small>&nbsp; &nbsp;<i class="fa fa-bars"></i></small>
+  </div>
+  <div class="navbar-custom-menu">
+    <ul class="nav navbar-nav">
+      <li><a href="javascript:" id="fullScreen" title="全屏"><i class="fa fa-arrows-alt"></i></a></li>
+      <%if(false) {%>
+      <li><a href="javascript:" id="switchSkin" title="切换主题" style="margin-top:-1px;"><i class="fa fa-dashboard"></i></a></li>
+      <li class="dropdown user-menu mr5">
+        <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+          <i class="fa icon-globe"></i>
+        </a>
+        <ul class="dropdown-menu">
+          <li class="mt5"></li>
+            <li><a href="/js/lang/zh_CN">简体中文</a></li>
+            <li><a href="/js/lang/en">英语</a></li>
+          <li class="mt10"></li>
+        </ul>
+      </li>
+      <li>
+        <a href="javascript:" data-href="/js/a/sys/online/list" data-title="在线人员" title="在线人员"
+          class="addTabPage">
+          <i class="icon-people"></i><span id="onlineCount" class="label label-success">0</span>
+        </a>
+        <% if(false) { %>
+        <script>
+          function refreshOnlineCount(){
+            $.get('/js/a/sys/online/count?__notUpdateSession=true&__t='
+                + new Date().getTime(), function(data){
+              try{$('#onlineCount').html(Number(data))}catch(e){}
+            })
+          }
+          refreshOnlineCount(); // 先执行一次
+          setInterval(refreshOnlineCount, 180000); // 3分钟执行一次
+        </script>
+        <% } %>
+      </li>
+      <%}%>
+      <% include('/include/_header_msg.html'){} %>
+      <li class="dropdown user-menu mr5">
+        <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+          <img class="user-image" src="${ctxPath}/files/avatar/${user.userCode}.jpg" src1="${ctxPath}/static/images/user${user.sex}.jpg" onerror="this.src=this.attributes.src1.value;">
+          <span class="hidden-xs">${user.userName}</span>
+        </a>
+        <ul class="dropdown-menu">
+          <li class="mt5">
+            <a id="userInfo" href="javascript:" data-href="${ctxPath}user/info" class="addTabPage">
+            <i class="fa fa-user"></i> 个人中心</a>
+          </li>
+          <li>
+            <a id="modifyPassword" href="javascript:" data-href="${ctxPath}user/info?op=pwd" class="addTabPage">
+            <i class="fa fa-key"></i> 修改密码</a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="${ctxPath}/logout">
+            <i class="fa fa-sign-out"></i> 退出登录</a>
+          </li>
+          <%if(false) {%>
+          <li class="divider"></li>
+          <li class="dropdown-header mb5">系统切换：</li>
+          <li>
+            <a href="/js/a/switch/default">
+              <i class="fa fa-check-circle-o"></i> 主导航菜单
+            </a>
+          </li>
+          <%}%>
+          <li class="mt10"></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>

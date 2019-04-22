@@ -1,0 +1,66 @@
+<% layout('/layouts/_default.html', {title: '消息模板管理', libs: ['dataGrid']}){ %>
+<%
+var items=[];
+%>
+<div class="main-content">
+  <div class="box box-main nav-tabs-custom nav-main">
+      <div class="box-header pull-right">
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+				<!-- <a href="#" class="btn btn-default" id="btnReadAllMsg" title="全部标记为已读"><i class="fa fa-eye"></i> 全部标记为已读</a> -->
+			</div>
+		</div>
+      <ul class="nav nav-tabs">
+		<li><a href="${ctxPath}/msg/list_readF"><i class="fa icon-envelope"></i> 未读消息</a></li>
+		<li class="active"><a href="${ctxPath}/msg/list_readT"><i class="fa icon-envelope-letter"></i> 已读消息</a></li>
+	  </ul>
+    <div class="box-body">
+      <#form:form id="searchForm" model="${row!}" action="${ctxPath}/msg/listData?readStatus=2" method="post" class="form-inline hide"
+          data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+        
+         <div class="form-group">
+          <label class="control-label">消息标题：</label>
+          <div class="control-inline">
+            <#form:input path="msgTitle" maxlength="100" class="form-control width-90"/>
+          </div>
+        </div>
+        
+       
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-sm">查询</button>
+          <button type="reset" class="btn btn-default btn-sm">重置</button>
+        </div>
+      </#form:form>
+      <table id="dataGrid"></table>
+      <div id="dataGridPage"></div>
+    </div>
+  </div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+var jq=$('#dataGrid').dataGrid({
+  searchForm: $("#searchForm"),
+  columnModel: [
+    {header:'消息标题', name:'msgInner.msgTitle', width:200, align:"center", frozen:true, formatter: function(val, obj, row, act){
+      return '<a href="${ctxPath}/msg/info?msgInnerRecordId='+row.id+'" class="btnList" data-title="消息详情">'+(val)+'</a>';
+    }},
+    {header:'发送者', name:'msgInner.sendUserName', width:300, align:"left"},
+    {header:'发送时间', name:'msgInner.sendDate', width:250, align:"center", formatter: function(val, obj, row, act) {
+    	return js.formatDate(new Date(val), "yyyy-MM-dd HH:mm:ss");
+    }},
+    {header:'读取时间', name:'readDate', width:250, align:"center", formatter: function(val, obj, row, act) {
+    	return js.formatDate(new Date(val), "yyyy-MM-dd HH:mm:ss");
+    }},
+    {header:'操作', name:'actions', width:100, sortable:false, title:false, formatter: function(val, obj, row, act){
+      var actions = [];
+      actions.push('<a href="${ctxPath}/msg/info?msgInnerRecordId='+row.id+'" class="btnList" title="消息详情"><i class="fa fa-eye"></i></a>&nbsp;');     
+      return actions.join('');
+    }}
+  ],
+  // 加载成功后执行事件
+  ajaxSuccess: function(data){
+    
+  }
+});
+</script>

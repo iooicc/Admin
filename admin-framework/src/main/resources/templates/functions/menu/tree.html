@@ -1,0 +1,6 @@
+<%
+var menus = @my.admin.framework.util.UserUtil.getMenuList();
+%>
+<%for(var ii in menus) {
+print(ii.html);
+}%>

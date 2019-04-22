@@ -1,0 +1,88 @@
+<% layout('/layouts/_default.html', {title: '菜单管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+  <div class="box box-main">
+    <div class="box-header">
+      <div class="box-title">
+        <i class="fa icon-book-open"></i> 菜单管理
+      </div>
+      <div class="box-title"></div>
+      <div class="box-tools pull-right">
+        <a href="#" class="btn btn-default" id="btnSearch" title="查询"><i class="fa fa-filter"></i> 查询</a>
+        <a href="#" class="btn btn-default" id="btnRefreshTree" title="刷新"><i class="fa fa-refresh"></i> 刷新</a>
+        <a href="#" class="btn btn-default" id="btnExpandTreeNode" title="展开一级"><i class="fa fa-angle-double-down"></i> 展开</a>
+        <a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="折叠全部"><i class="fa fa-angle-double-up"></i> 折叠</a>
+        
+        <a href="${ctxPath}/menu/form?sysCode=" class="btn btn-default btnTool" title="新增菜单"><i class="fa fa-plus"></i> 新增</a>
+        <a href="#" class="btn btn-default" id="btnUpdateSort" title="保存排序"><i class="fa fa-sort-amount-asc"></i> 保存排序</a>
+      </div>
+    </div>
+    <div class="box-body">
+      <#form:form id="searchForm" model="${row}" action="${ctxPath}/menu/listData" method="post" class="form-inline hide">
+        <div class="form-group">
+          <label class="control-label">菜单名称：</label>
+          <div class="control-inline">
+            <#form:input name="menuName" value="${parameter.menuName}" maxlength="50" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-sm">查询</button>
+          <button type="reset" class="btn btn-default btn-sm">重置</button>
+        </div>
+      </#form:form>
+      <form id="dataGridForm" action="${ctxPath}/menu/updateTreeSort" method="post">
+        <table id="dataGrid"></table>
+      </form>
+    </div>
+  </div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+  searchForm: $("#searchForm"),
+  columnModel: [ 
+    {header:'菜单名称', name:'menuName', width:200, formatter: function(val, obj, row, act){
+      return '<i class="'+(row.menuIcon||'icon-grid')+'" style="color:'+row.color+'"></i> <a href="${ctxPath}/sys/menu/form?menuCode='
+          +row.id+'" class="btnList" style="color:'+row.color+'" data-title="编辑菜单">'+val+'</a>';
+    }},
+    {header:'链接', name:'menuHref', width:150},
+    {header:'排序', name:'treeSort', width:63, align:"center", formatter: function(val, obj, row, act){
+      var html = [];
+      html.push('<input type="text" name="sorts['+row.id+']" value="'+row.treeSort+'"/>');
+      return html.join('');
+    }},
+    {header:'类型', name:'menuType', width:50, fixed:true, align:"center", formatter: function(val, obj, row, act){
+      return js.getDictLabel([{"id":"980614923933782018","status":"0","createBy":"system","updateDate":"2018-04-02 09:16","updateBy":"system","createDate":"2018-04-02 09:16","parentCodes":"0,","treeSort":30,"treeLeaf":"1","treeSorts":"0000000030,","treeLevel":0,"treeNames":"菜单","dictCode":"980614923933782018","cssClass":"","isSys":"1","dictLabelOrig":"菜单","dictType":"sys_menu_type","cssStyle":"","description":"","dictValue":"1","dictLabel":"菜单","isRoot":true,"isTreeLeaf":true,"parentCode":"0"},{"id":"980614924000890880","status":"0","createBy":"system","updateDate":"2018-04-02 09:16","updateBy":"system","createDate":"2018-04-02 09:16","parentCodes":"0,","treeSort":40,"treeLeaf":"1","treeSorts":"0000000040,","treeLevel":0,"treeNames":"权限","dictCode":"980614924000890880","cssClass":"","isSys":"1","dictLabelOrig":"权限","dictType":"sys_menu_type","cssStyle":"color:#c243d6;","description":"","dictValue":"2","dictLabel":"权限","isRoot":true,"isTreeLeaf":true,"parentCode":"0"}], val, '未知', true);
+    }},
+    {header:'可见', name:'isShow', width:50, fixed:true, align:"center", formatter: function(val, obj, row, act){
+      return js.getDictLabel([{"id":"980614923606626305","status":"0","createBy":"system","updateDate":"2018-06-06 16:56","updateBy":"system","createDate":"2018-06-06 16:56","parentCodes":"0,","treeSort":30,"treeLeaf":"1","treeSorts":"0000000030,","treeLevel":0,"treeNames":"显示","dictCode":"980614923606626305","cssClass":"","isSys":"1","dictLabelOrig":"显示","dictType":"sys_show_hide","cssStyle":"","description":"","dictValue":"1","dictLabel":"显示","isRoot":true,"isTreeLeaf":true,"parentCode":"0"},{"id":"980614923669540864","status":"0","createBy":"system","updateDate":"2018-04-02 09:16","updateBy":"system","createDate":"2018-04-02 09:16","parentCodes":"0,","treeSort":40,"treeLeaf":"1","treeSorts":"0000000040,","treeLevel":0,"treeNames":"隐藏","dictCode":"980614923669540864","cssClass":"","isSys":"1","dictLabelOrig":"隐藏","dictType":"sys_show_hide","cssStyle":"color:#aaa;","description":"","dictValue":"0","dictLabel":"隐藏","isRoot":true,"isTreeLeaf":true,"parentCode":"0"}], val, '未知', true);
+    }},
+    {header:'权限标识', name:'permission', width:150},
+    {header:'操作', name:'actions', width:100, sortable:false, formatter: function(val, obj, row, act){
+    	if(row.isBuilt==1) return "[内置]";
+      var actions = [];
+      actions.push('<a href="${ctxPath}/menu/form?menuCode='+row.id+'" class="btnList" title="编辑菜单"><i class="fa fa-pencil"></i></a>&nbsp;');
+      actions.push('<a href="${ctxPath}/menu/delete?menuCode='+row.id+'" class="btnList" title="删除菜单" data-confirm="确认要删除该菜单及所有子菜单吗？" data-deltreenode="'+row.id+'"><i class="fa fa-trash-o"></i></a>&nbsp;');
+      actions.push('<a href="${ctxPath}/menu/form?parentCode='+row.id+'" class="btnList" title="新增下级菜单"><i class="fa fa-plus-square"></i></a>&nbsp;');
+      return actions.join('');
+    }}
+  ],
+  treeGrid: true,     // 启用树结构表格
+  defaultExpandLevel: 0,  // 默认展开的层次
+  expandNodeClearPostData: 'menuName', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）
+  // 加载成功后执行事件
+  ajaxSuccess: function(data){
+    
+  }
+});
+
+// 绑定更新排序按钮
+$('#btnUpdateSort').click(function(){
+   js.ajaxSubmitForm($("#dataGridForm"), function(data){
+    if(data.result == Global.TRUE){
+      $('#btnRefreshTree').click();
+    }
+    js.showMessage(data.message);
+  }, "json");
+});
+</script>

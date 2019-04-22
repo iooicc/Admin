@@ -1,0 +1,108 @@
+<% layout('/layouts/_default.html', {title: '', libs: ['validate']}){ %>
+<%
+var items=[];
+%>
+<div class="main-content">
+  <div class="box box-main">
+    <div class="box-header">
+      <div class="box-title">
+        <i class="fa icon-book-open"></i> 编辑机构
+      </div>
+      <div class="box-title"></div>
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <#form:form id="inputForm" model="${org}" action="${ctxPath}/org/save" method="post" class="form-horizontal">
+      <#form:hidden name="orgCode" value="${org.orgCode}" />
+
+      <div class="box-body">
+        <div class="form-unit">基本信息</div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4">上级机构：</label>
+              <div class="col-sm-8">
+                <#form:treeselect id="parent" title="上级机构"
+                  path="parent.orgCode" name="parent.orgCode" labelPath="parent.orgName"
+                  url="${ctxPath}/org/treeData?excludeCode=${org.orgCode}&sysCode=${org.sysCode}&isShowNameOrig=true"
+                  class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4"><span class="required">*</span> 机构名称：</label>
+              <div class="col-sm-8">
+                <#form:input id="orgName" name="orgName" value="${org.orgName}" maxlength="50" class="form-control required" />
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="标识当前是否是个机构，还是只是设置权限"><span class="required">*</span> 机构代码：<i class="fa icon-question"></i></label>
+              <div class="col-sm-8">
+                <#form:input id="viewCode" name="viewCode" value="${org.viewCode}" maxlength="50" class="form-control required" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title=""><span class="required">*</span> 机构全称：<i class="fa icon-question"></i></label>
+              <div class="col-sm-8">
+                <#form:input id="fullName" name="fullName" value="${org.fullName}" maxlength="50" class="form-control required" />
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4">排序(升序)：</label>
+              <div class="col-sm-8">
+                <#form:input id="treeSort" name="treeSort" value="${org.treeSort}" maxlength="50" class="form-control required"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-unit">其它信息</div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label class="control-label col-sm-2">备注：</label>
+              <div class="col-sm-10">
+                <#form:textarea name="remarks" value="${org.remarks}" rows="3" maxlength="200" class="form-control"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box-footer">
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+            <button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+          </div>
+        </div>
+      </div>
+    </#form:form>
+  </div>
+</div>
+<% } %>
+<script type="text/javascript">
+$("#inputForm").validate({
+  submitHandler: function(form){
+    js.ajaxSubmitForm($(form), function(data){
+      js.showMessage(data.message);
+      if(data.result == Global.TRUE){
+        js.closeCurrentTabPage(function(contentWindow){
+          contentWindow.$('#dataGrid').dataGrid('refreshTreeChildren',
+              $('#parentCode').val(), '${org.id}');
+        });
+      }
+    }, "json");
+    }
+});
+</script>

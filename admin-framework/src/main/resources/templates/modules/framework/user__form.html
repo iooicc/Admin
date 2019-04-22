@@ -1,0 +1,193 @@
+<% layout('/layouts/_default.html', {title: '', libs: ['validate', 'dataGrid']}){ %>
+<%
+var items=[];
+%>
+<div class="main-content">
+  <div class="box box-main">
+    <div class="box-header with-border">
+      <div class="box-title">
+        <i class="fa fa-list-alt"></i> ${op == 'add' ? '新增' : '编辑'}用户
+      </div>
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <#form:form id="inputForm" model="${row}" action="${ctxPath}/user/save" method="post" class="form-horizontal">
+      <#form:hidden name="op" value="${op}"/>
+      <#form:hidden path="userCode"/>
+      <div class="box-body">
+        <div class="form-unit">基本信息</div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="">
+                <span class="required ">*</span> 登录账号：<i class="fa icon-question hide"></i></label>
+              <div class="col-sm-8">
+                <#form:hidden name="oldLoginCode" value="${row.loginCode}"/>
+                <#form:input path="loginCode" minlength="4" maxlength="20"
+                  readonly="${op!='add'}"
+                  class="form-control required userName"
+                  remote="${ctxPath}/user/checkLoginCode?oldLoginCode=${row.loginCode}"
+                  data-msg-remote="登录账号已存在"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="">
+                <span class="required ">*</span> 用户名称：<i class="fa icon-question hide"></i></label>
+              <div class="col-sm-8">
+                <#form:input path="userName" maxlength="32"
+                  readonly="${op=='auth'}"
+                  class="form-control required "/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%if(op=='add'||op=='edit') {%>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="">
+                <span class="required ">*</span> 归属机构：<i class="fa icon-question hide"></i></label>
+              <div class="col-sm-8">
+                <#form:treeselect id="org" title="机构选择"
+                  path="org.orgCode" name="org.orgCode" labelPath="org.orgName" 
+                  url="${ctxPath}/org/treeData?" class="" allowClear="false"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <%if(op=='add') {%>
+            <div class="form-group">
+              <label class="control-label col-sm-4" title=""><span class="required ">*</span> 初始密码：<i class="fa icon-question hide"></i></label>
+              <div class="col-sm-8">
+                <#form:input path="password" maxlength="32" class="form-control required"/>
+              </div>
+            </div>
+            <%} else {%>
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="不修改密码请留空"> 初始密码：<i class="fa icon-question "></i></label>
+              <div class="col-sm-8">
+                <#form:input path="password" maxlength="32" class="form-control "/>
+              </div>
+            </div>
+            <%}%>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="">
+                <span class="required hide">*</span> 手机号码：<i class="fa icon-question hide"></i></label>
+              <div class="col-sm-8">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-fw fa-mobile" style="margin-top:-2px;display:block;"></i></span>
+                  <#form:input path="mobile" maxlength="100" class="form-control mobile"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="">
+                <span class="required hide">*</span> 电子邮箱：<i class="fa icon-question hide"></i></label>
+              <div class="col-sm-8">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-fw fa-envelope" style="margin-top:-2px;display:block;"></i></span>
+                  <#form:input path="email" maxlength="300" class="form-control email"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label class="control-label col-sm-4" title="">
+                <span class="required hide">*</span> 办公电话：<i class="fa icon-question hide"></i></label>
+              <div class="col-sm-8">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-fw fa-phone"></i></span>
+                  <#form:input path="phone" maxlength="100" class="form-control ${!true?'phone':''}"/>
+                        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label class="control-label col-sm-2" title="">
+                <span class="required hide">*</span> 备注信息：<i class="fa icon-question hide"></i></label>
+              <div class="col-sm-10">
+                <#form:textarea path="remarks" rows="4" maxlength="500" class="form-control "/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%}%>
+        <% if(op == 'add' || op == 'auth') { %>
+        <div class="form-unit">分配角色</div>
+        <div class="pl10 pb20">
+          <table id="roleGrid"></table>
+          <#form:hidden id="userRoleString" name="userRoleString"/>
+        </div>
+        <% } %>
+      </div>
+      <div class="box-footer">
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+            <button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> 关 闭</button>
+          </div>
+        </div>
+      </div>
+    </#form:form>
+  </div>
+</div>
+<% } %>
+<script type="text/javascript">
+$("#inputForm").validate({
+    submitHandler: function(form){
+    	<% if(op == 'add' || op == 'auth') {%>
+      // 获取选中角色
+      $("#userRoleString").val(roleGrid.dataGrid('getSelectRows').join(','));
+      <% } %>
+      js.ajaxSubmitForm($(form), function(data){
+        js.showMessage(data.message);
+        if(data.result == Global.TRUE){
+          js.closeCurrentTabPage(function(contentWindow){
+            contentWindow.page();
+          });
+        }
+      }, "json");
+    }
+});
+<% if(op == 'add' || op == 'auth') {%>
+//加载角色列表
+var roleGrid = $("#roleGrid").dataGrid({
+url: '${ctxPath}/role/treeData',
+postData: [
+ {name:'userType',value:'employee'},
+ {name:'ctrlPermi',value:'2'}
+],
+columnModel: [
+ {header:'角色名称', name:'roleName', sortable:false, width:100, align:"center"},
+ {header:'角色编码', name:'roleCode', key:true, sortable:false, width:100, align:"center"}  
+],
+showCheckbox: true,
+autoGridHeight: function(){
+ return 'auto';
+},
+autoGridWidth: function(){
+ return $('#inputForm .box-body').width()-20;
+},
+ajaxSuccess: function(){
+ <% for (role in roleList!){ %>
+ roleGrid.dataGrid('setSelectRow', '${role.roleCode}');
+ <% } %>
+}
+});
+<% } %>
+</script>

@@ -1,0 +1,75 @@
+<% layout('/layouts/_default.html', {title: '登录', libs: ['validate'], bodyClass: 'login-page'}){ %>
+<% include('/include/_upgrade.html'){} // 如果客户浏览器版本过低，则显示浏览器升级提示。 %>
+<link rel="stylesheet" href="${ctxPath}/static/icheck/1.0/square/blue.css?">
+<link rel="stylesheet" href="${ctxPath}/static/jquery-toastr/2.0/toastr.min.css?">
+<link rel="stylesheet" href="${ctxPath}/static/modules/sys/sysLogin.css?">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="${ctxPath}/login"><b>${@Global.getProperty("project.productName")}</b>
+      <small>${@Global.getProperty("project.productVersion")}</small></a>
+  </div>
+  <div class="login-box-body">
+    <#form:form id="registerForm" model="${user!}" action="${ctxPath}/account/register_save" method="post">
+      <div class="form-group has-feedback">
+        <span class="glyphicon glyphicon-user form-control-feedback" title="登录账号"></span>
+        <#form:input type="text" id="loginCode" name="loginCode" class="form-control required"
+          data-msg-required="请填写登录账号." placeholder="登录账号"
+          value="${cookie('rememberUserCode')}"/>
+      </div>
+      <div class="form-group has-feedback">
+        <span class="glyphicon glyphicon-lock form-control-feedback"
+          title="登录密码，鼠标按下显示密码"
+          onmousedown="$('#fp_password').attr('type','text')"
+          onmouseup="$('#fp_password').attr('type','password')"></span>
+        <input type="password" autocomplete="off" id="fp_password" name="password"
+          class="form-control required" data-msg-required="设置你的登录密码."
+          rangelength="3,50" data-msg-rangelength="密码长度不能小于3并大于50个字符."
+          placeholder="设置你的登录密码" />
+      </div>
+      <div class="form-group has-feedback">
+        <span class="glyphicon glyphicon-lock form-control-feedback"
+          title="登录密码，鼠标按下显示密码"
+          onmousedown="$('#fp_confirmPassword').attr('type','text')"
+          onmouseup="$('#fp_confirmPassword').attr('type','password')"></span>
+        <input type="password" autocomplete="off" id="fp_confirmPassword" name="confirmPassword"
+          class="form-control required" data-msg-required="请再次输入你的密码."
+          rangelength="3,50" data-msg-rangelength="密码长度不能小于3并大于50个字符."
+          equalTo="#fp_password" data-msg-equalTo="密码与确认密码不同."
+          placeholder="请再次输入你的密码" />
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <button type="submit" class="btn btn-primary btn-block btn-flat"
+            id="btnSubmit" data-loading="操作中...">提交</button>
+        </div>
+        <div class="col-xs-6">
+          <button type="button" class="btn btn-default btn-block btn-flat"
+            id="btnReset">返回</button>
+        </div>
+      </div>
+    </#form:form>
+  </div>
+  <div class="login-copyright">${@Global.getProperty("project.copyright")}</div>
+</div>
+<% } %>
+<script>var secretKey = '';</script>
+<script src="${ctxPath}/static/jquery-toastr/2.0/toastr.min.js?"></script>
+<script src="${ctxPath}/static/common/des.js?"></script>
+<script type="text/javascript">
+$('#registerForm').validate({
+  ignore: ":hidden",
+  submitHandler: function(form) {
+    js.ajaxSubmitForm($(form), function(data){
+      if (data.result == "true"){
+        alert(data.message);
+        location = "${ctx}/login";
+      }else{
+        js.showMessage(data.message);
+      }
+    });
+  }
+});
+$('#btnReset').click(function(){
+  location = '${ctxPath}/login';
+});
+</script>
