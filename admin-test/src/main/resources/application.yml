@@ -1,0 +1,78 @@
+#debug: false
+spring:   
+  profiles:
+    active: default
+  application:
+    name: admin-test
+  http:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_admin?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    hikari:
+      maximumPoolSize: 15      
+  redis:
+    enabled: false
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+  cache:
+    type: ehcache
+    ehcache:
+      config: ehcache-local.xml      
+flyway:
+ enabled: true #是否开启flywary，默认true
+ baseline-on-migrate: true #默认false
+ locations: 
+   - classpath:db/framework/migration
+#   - classpath:db/admin-test/migration
+server:
+  port: 86
+  maxHttpHeaderSize: 32768
+  session: 
+    timeout: 21600
+  tomcat:
+     max-threads: 2000     
+beetlsql:
+  enabled: true
+  dev: true
+  basePackage: my.**.dao
+  daoSuffix: Dao
+  sqlPath: /sql
+beetl:
+  enabled: true
+  suffix: html
+shiro:
+  filterChainDefinitions: |
+    /hellow/** = anon
+    /ReportServer/** = user
+    /** = user
+  defaultFilterChainDefinitions: |
+    /static/** = anon
+    /global.min.js = anon
+    /validCode = anon
+    /account/register = anon
+    /account/register_save = anon
+    /files/** = anon
+    /file/download = anon
+    
+    /druid/** = perms[sys:state:druid]
+    /login = authc
+    /logout = logout
+project:
+  context-path: /admin-test
+  productName: admin-test测试库
+  productVersion: V0.1
+  copyright: 
+  
+  upload:
+    savePath: C:/data/files/admin-test/
+  download:
+    urlPrefix: /files/
+    
+    
